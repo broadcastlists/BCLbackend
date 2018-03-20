@@ -40,7 +40,7 @@ app.post('/add',(req, res) => {
     date : Date()
   }
 
-
+console.log(d);
   MongoClient.connect(url, async (err, db) =>{
     if (err) throw err;
     console.log("connectd");
@@ -48,6 +48,7 @@ app.post('/add',(req, res) => {
     await dbo.collection("data").insertOne(d,function(err, result) {
       if (err) throw err;
 res.send("Added");
+
       db.close();
     });
   });
