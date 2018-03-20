@@ -6,7 +6,13 @@ const url = 'mongodb://joshtalks:joshtalks@ds213759.mlab.com:13759/broadcast';
 app.set('view engine','ejs');
 app.use(parser.urlencoded({ extended: false }))
 app.use(parser.json())
-
+app.use(function (req, res, next){
+  if (req.headers['x-forwarded-proto'] === 'https') {
+    res.redirect('http://' + req.hostname + req.url);
+  } else {
+    next();
+  }
+});
 
 
 
