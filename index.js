@@ -7,6 +7,7 @@ app.set('view engine','ejs');
 app.use(parser.urlencoded({ extended: false }))
 app.use(parser.json())
 app.get('/',async (req, res) => {
+
   MongoClient.connect(url, async (err, db) =>{
     if (err) throw err;
     console.log("connectd");
@@ -25,7 +26,20 @@ app.get('/',async (req, res) => {
 });
 
 app.get('/broadcast',(req, res) => {
- res.render('add')
+  MongoClient.connect(url, async (err, db) =>{
+    if (err) throw err;
+    console.log("connectd");
+    var dbo = db.db("broadcast");
+    var mysort = { date: -1 };
+    await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
+      if (err) throw err;
+ res.render('add',{status:"",data:JSON.stringify(
+  result
+)[0]})
+ 
+      db.close();
+    });
+  });
 
  
 });
@@ -43,7 +57,7 @@ console.log(d);
     var dbo = db.db("broadcast");
     await dbo.collection("data").insertOne(d,function(err, result) {
       if (err) throw err;
-res.send("Added");
+      res.render('add',{...d,status:'added'});
 
       db.close();
     });

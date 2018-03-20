@@ -14,10 +14,11 @@
     <form name="form1" method="POST" action="/add">
     <table>
         <tr>
-        <textarea id="summernote" name="fname"> <p>Welcome to Palak BroadCast</p></textarea>
+        <textarea id="summernote" name="fname"> <p><%= data %></p></textarea>
         </tr>
         <tr>
         <td colspan="2"><input type="submit" value="Save" ></td>
+        <%= status %>
         </tr>
     </table>
     </form>   
