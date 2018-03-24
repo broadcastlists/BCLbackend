@@ -33,10 +33,7 @@ app.get('/broadcast',(req, res) => {
     var mysort = { date: -1 };
     await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
       if (err) throw err;
- res.render('add',{status:"",data:JSON.stringify(
-  result
-)[0]})
- 
+ res.render('add',{status:"",data : result[0].data })
       db.close();
     });
   });
@@ -47,10 +44,12 @@ app.get('/broadcast',(req, res) => {
 app.post('/add',(req, res) => {
   let d = {
     data : req.body.fname,
-    date : Date()
+    date : Date(),
+    up : req.body.up,
   }
 
-console.log(d);
+  if(d.up == "update")
+  {
   MongoClient.connect(url, async (err, db) =>{
     if (err) throw err;
     console.log("connectd");
@@ -62,7 +61,22 @@ console.log(d);
       db.close();
     });
   });
+  }
 
+  if(d.up == "addnew")
+  {
+    MongoClient.connect(url, async (err, db) =>{
+      if (err) throw err;
+      console.log("connectd");
+      var dbo = db.db("broadcast");
+      await dbo.collection("data").insertOne(d,function(err, result) {
+        if (err) throw err;
+        res.render('add',{...d,status:'added'});
+  
+        db.close();
+      });
+    });
+  }
 
 })
 app.listen(process.env.PORT || 5000);

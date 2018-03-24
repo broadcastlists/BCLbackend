@@ -6,10 +6,7 @@
 
 <script>
   $(document).ready(function() {
-      $('#summernote').summernote();
-  });
-  $('#summernote').summernote({
-    fontSizes: ['8', '9', '10', '11', '12', '14', '18', '24', '36', '48' , '64', '82', '150']
+$('#summernote').summernote();
 });
 </script>
 <body>
@@ -17,10 +14,11 @@
     <form name="form1" method="POST" action="/add">
     <table>
         <tr>
-        <textarea id="summernote" name="fname"> <p><%= data %></p></textarea>
+        <textarea id="summernote" name="fname"><%= data %></textarea>
         </tr>
         <tr>
-        <td colspan="2"><input type="submit" value="Save" ></td>
+        <td colspan="2"><input type="submit" value="addnew" name="up"></td>
+        <td colspan="2"><input type="submit" value="update" name="up"></td>
         <%= status %>
         </tr>
     </table>
