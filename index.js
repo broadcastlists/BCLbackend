@@ -54,6 +54,7 @@ app.post('/add',(req, res) => {
     if (err) throw err;
     console.log("connectd");
     var dbo = db.db("broadcast");
+    await dbo.collection("data").remove();    
     await dbo.collection("data").insertOne(d,function(err, result) {
       if (err) throw err;
       res.render('add',{...d,status:'added'});
@@ -69,6 +70,7 @@ app.post('/add',(req, res) => {
       if (err) throw err;
       console.log("connectd");
       var dbo = db.db("broadcast");
+    await dbo.collection("data").remove();    
       await dbo.collection("data").insertOne(d,function(err, result) {
         if (err) throw err;
         res.render('add',{...d,status:'added'});
