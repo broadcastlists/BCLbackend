@@ -44,7 +44,7 @@ app.get('/broadcast',(req, res) => {
 app.post('/add',(req, res) => {
   let d = {
     data : req.body.fname,
-    date : Date(),
+    date : new Date().toISOString(),
     up : req.body.up,
   }
 
