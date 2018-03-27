@@ -15,6 +15,8 @@ app.get('/',async (req, res) => {
     var mysort = { date: -1 };
     await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
       if (err) throw err;
+      time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
+     result[0].date = time + "h";
       res.send(JSON.stringify(
         result
     ));
