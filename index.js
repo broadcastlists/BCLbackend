@@ -12,7 +12,7 @@ app.get('/',async (req, res) => {
     if (err) throw err;
     console.log("connectd");
     var dbo = db.db("broadcast");
-    var mysort = { date: -1 };
+    var mysort = { sno: -1 };
     await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
       if (err) throw err;
       time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
@@ -31,39 +31,15 @@ app.get('/',async (req, res) => {
 });
 
 
-app.get('/test',async (req, res) => {
-  
-    MongoClient.connect(url, async (err, db) =>{
-      if (err) throw err;
-      console.log("connectd");
-      var dbo = db.db("broadcast");
-      var mysort = { date: -1 };
-      await dbo.collection("test").find({}).sort(mysort).limit(1).toArray(function(err, result) {
-        if (err) throw err;
-        time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
-        if(time == 0)
-       result[0].date = "now";
-       else
-       result[0].date = time + "h";
-        res.send(JSON.stringify(
-          result
-      ));
-        db.close();
-      });
-    });
-  
-   
-  });
-
 app.get('/broadcast',(req, res) => {
   MongoClient.connect(url, async (err, db) =>{
     if (err) throw err;
     console.log("connectd");
     var dbo = db.db("broadcast");
-    var mysort = { date: -1 };
+    var mysort = { sno: -1 };
     await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
       if (err) throw err;
- res.render('add',{status:"",data : result[0].data })
+ res.render('add',{status:"",data : result[0].data,sno : result[0].sno })
       db.close();
     });
   });
@@ -76,6 +52,7 @@ app.post('/add',(req, res) => {
     data : req.body.fname,
     date : new Date().toISOString(),
     up : req.body.up,
+    sno : req.body.sno,
   }
 
   if(d.up == "update")
@@ -84,10 +61,10 @@ app.post('/add',(req, res) => {
     if (err) throw err;
     console.log("connectd");
     var dbo = db.db("broadcast");
-    await dbo.collection("data").remove();    
+    await dbo.collection("data").deleteOne({sno:d.sno});    
     await dbo.collection("data").insertOne(d,function(err, result) {
       if (err) throw err;
-      res.render('add',{...d,status:'added'});
+      res.render('add',{...d,status:'updated'});
 
       db.close();
     });
@@ -99,8 +76,7 @@ app.post('/add',(req, res) => {
     MongoClient.connect(url, async (err, db) =>{
       if (err) throw err;
       console.log("connectd");
-      var dbo = db.db("broadcast");
-    await dbo.collection("data").remove();    
+      var dbo = db.db("broadcast");  
       await dbo.collection("data").insertOne(d,function(err, result) {
         if (err) throw err;
         res.render('add',{...d,status:'added'});
