@@ -32,6 +32,54 @@ app.get('/',async (req, res) => {
 });
 
 
+app.get('/',async (req, res) => {
+  
+    MongoClient.connect(url, async (err, db) =>{
+      if (err) throw err;
+      console.log("connectd");
+      var dbo = db.db("broadcast");
+      var mysort = { sno: -1 };
+      await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
+        if (err) throw err;
+        time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
+        if(time == 0)
+       result[0].date = "now";
+       else
+       result[0].date = time + "h";
+        res.send(JSON.stringify(
+          result
+      ));
+        db.close();
+      });
+    });
+  
+   
+  });
+
+
+  app.get('/find/:sno',async (req, res) => {
+    
+      MongoClient.connect(url, async (err, db) =>{
+        if (err) throw err;
+        console.log("connectd");
+        var dbo = db.db("broadcast");
+        await dbo.collection("data").find({sno:req.params.sno}).limit(1).toArray(function(err, result) {
+          if (err) throw err;
+          time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
+          if(time == 0)
+         result[0].date = "now";
+         else
+         result[0].date = time + "h";
+          res.send(JSON.stringify(
+            result
+        ));
+          db.close();
+        });
+      });
+    
+     
+    });
+
 app.get('/old',async (req, res) => {
   
     MongoClient.connect(url, async (err, db) =>{
@@ -51,6 +99,7 @@ app.get('/old',async (req, res) => {
    
   });
 
+  
 
 app.get('/broadcast',(req, res) => {
   MongoClient.connect(url, async (err, db) =>{
