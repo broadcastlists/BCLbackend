@@ -54,7 +54,16 @@ app.get('/',async (req, res) => {
           if(time == 0)
          result[0].date = "now";
          else
+         {
+           if(time >= 24)
+           {
+            result[0].date = Math.floor(time/24) + "d";
+           }
+           else{
          result[0].date = time + "h";
+           }
+    
+        }
           res.send(JSON.stringify(
             result
         ));
