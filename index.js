@@ -20,7 +20,16 @@ app.get('/',async (req, res) => {
       if(time == 0)
      result[0].date = "now";
      else
+     {
+       if(time >= 24)
+       {
+        result[0].date = Math.floor(time/24) + "d";
+       }
+       else{
      result[0].date = time + "h";
+       }
+
+    }
       res.send(JSON.stringify(
         result
     ));
@@ -31,30 +40,6 @@ app.get('/',async (req, res) => {
  
 });
 
-
-app.get('/',async (req, res) => {
-  
-    MongoClient.connect(url, async (err, db) =>{
-      if (err) throw err;
-      console.log("connectd");
-      var dbo = db.db("broadcast");
-      var mysort = { sno: -1 };
-      await dbo.collection("data").find({}).sort(mysort).limit(1).toArray(function(err, result) {
-        if (err) throw err;
-        time = Math.floor((new Date(new Date().toISOString()) - new Date(result[0].date))/3600e3);
-        if(time == 0)
-       result[0].date = "now";
-       else
-       result[0].date = time + "h";
-        res.send(JSON.stringify(
-          result
-      ));
-        db.close();
-      });
-    });
-  
-   
-  });
 
 
   app.get('/find/:sno',async (req, res) => {
