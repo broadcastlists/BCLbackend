@@ -18,7 +18,6 @@ const url = 'mongodb://joshtalks:joshtalks@ds213759.mlab.com:13759/broadcast';
 app.set('view engine','ejs');
 app.use(parser.urlencoded({ extended: false }))
 app.use(parser.json())
-
 app.get('/',async (req, res) => {
   MongoClient.connect(url, async (err, db) =>{
     if (err) throw err;
